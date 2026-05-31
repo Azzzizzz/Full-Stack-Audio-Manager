@@ -10,6 +10,7 @@ from app.core.db import init_db
 from app.core.limiter import limiter
 from app.core.middleware import SecurityHeadersMiddleware
 from app.routers import auth as auth_router
+from app.routers import audio as audio_router
 
 
 @asynccontextmanager
@@ -34,6 +35,7 @@ app.add_middleware(
 )
 
 app.include_router(auth_router.router)
+app.include_router(audio_router.router)
 
 
 @app.get("/health")
