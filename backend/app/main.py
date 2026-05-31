@@ -7,12 +7,13 @@ from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
 
 from app.core.config import settings
+from app.core.db import init_db
 from app.core.middleware import SecurityHeadersMiddleware
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # DB connection initialised in Task 2
+    await init_db()
     yield
 
 
