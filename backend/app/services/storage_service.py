@@ -8,15 +8,15 @@ from app.core.config import settings
 
 
 def _make_client():
-    kwargs = dict(
+    endpoint = settings.S3_ENDPOINT_URL or f"https://s3.{settings.AWS_REGION}.amazonaws.com"
+    return boto3.client(
+        "s3",
         region_name=settings.AWS_REGION,
         aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
         aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+        endpoint_url=endpoint,
         config=Config(signature_version="s3v4"),
     )
-    if settings.S3_ENDPOINT_URL:
-        kwargs["endpoint_url"] = settings.S3_ENDPOINT_URL
-    return boto3.client("s3", **kwargs)
 
 
 class StorageService:
