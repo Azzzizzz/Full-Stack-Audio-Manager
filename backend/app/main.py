@@ -2,13 +2,14 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
-from slowapi.util import get_remote_address
 
 from app.core.config import settings
 from app.core.db import init_db
+from app.core.limiter import limiter
 from app.core.middleware import SecurityHeadersMiddleware
+from app.routers import auth as auth_router
 
 
 @asynccontextmanager
@@ -16,11 +17,6 @@ async def lifespan(app: FastAPI):
     await init_db()
     yield
 
-
-limiter = Limiter(
-    key_func=get_remote_address,
-    default_limits=[settings.RATE_LIMIT_DEFAULT],
-)
 
 app = FastAPI(title="Meeami Audio API", lifespan=lifespan)
 
@@ -36,6 +32,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(auth_router.router)
 
 
 @app.get("/health")
