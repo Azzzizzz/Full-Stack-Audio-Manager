@@ -1,5 +1,6 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
 import AppLayout from '../layouts/AppLayout'
+import ProtectedRoute from './ProtectedRoute'
 import Login from '../pages/Login'
 import Register from '../pages/Register'
 import AudioList from '../pages/AudioList'
@@ -11,9 +12,14 @@ const router = createBrowserRouter([
     children: [
       { path: '/login', element: <Login /> },
       { path: '/register', element: <Register /> },
-      { path: '/audio', element: <AudioList /> },
-      { path: '/upload', element: <Upload /> },
-      { path: '/', element: <Login /> },
+      {
+        element: <ProtectedRoute />,
+        children: [
+          { path: '/audio', element: <AudioList /> },
+          { path: '/upload', element: <Upload /> },
+        ],
+      },
+      { path: '/', element: <Navigate to="/login" replace /> },
     ],
   },
 ])
