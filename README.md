@@ -67,16 +67,11 @@ Services:
 - Backend API on `http://localhost:8000`
 - Frontend on `http://localhost:8080`
 
-### 3. Seed the demo user
-
-```bash
-docker compose exec backend python -m app.seed
-# Created demo user: testuser1@test.com / 12345678
-```
-
-### 4. Open the app
+### 3. Open the app
 
 Navigate to `http://localhost:8080` and log in with `testuser1@test.com` / `12345678`.
+
+> The demo user is seeded automatically on startup.
 
 ---
 
