@@ -1,9 +1,13 @@
+import logging
+
 from fastapi import HTTPException, status
 
 from app.core.security import create_access_token, hash_password, verify_password
 from app.models.user import User
 from app.repositories.user_repository import UserRepository
 from app.schemas.auth import LoginRequest, RegisterRequest, TokenResponse, UserResponse
+
+logger = logging.getLogger(__name__)
 
 
 class AuthService:
@@ -24,6 +28,7 @@ class AuthService:
             hashed_password=hash_password(req.password),
         )
         user = await self._repo.create(user)
+        logger.info("registered user email=%s", req.email)
 
         return UserResponse(
             id=str(user.id),
@@ -42,6 +47,7 @@ class AuthService:
             )
 
         token = create_access_token(str(user.id))
+        logger.info("login success email=%s", req.email)
         return TokenResponse(
             access_token=token,
             first_name=user.first_name,

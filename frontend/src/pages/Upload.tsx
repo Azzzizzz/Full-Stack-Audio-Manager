@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { isAxiosError } from 'axios'
 import { CloudUpload, Music, FileText, Headphones, Clock, ShieldCheck } from 'lucide-react'
-import client from '../services/client'
+import { uploadAudio } from '../services/audio'
 
 const FORMATS = [
   { ext: 'MP3', label: 'MPEG Audio Layer III', color: 'bg-violet-500' },
@@ -44,21 +45,14 @@ export default function Upload() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!file) return
-    const form = new FormData()
-    form.append('file', file)
     setUploading(true)
     setError('')
     setProgress(0)
     try {
-      await client.post('/audio/upload', form, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-        onUploadProgress: (evt) => {
-          if (evt.total) setProgress(Math.round((evt.loaded / evt.total) * 100))
-        },
-      })
+      await uploadAudio(file, setProgress)
       navigate('/audio')
     } catch (err: unknown) {
-      const status = (err as { response?: { status?: number } }).response?.status
+      const status = isAxiosError(err) ? err.response?.status : undefined
       if (status === 400) setError('Invalid file type. Only audio files are accepted.')
       else if (status === 413) setError('File exceeds the 50 MB limit.')
       else setError('Upload failed. Please try again.')

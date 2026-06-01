@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { isAxiosError } from 'axios'
 import { useNavigate, Link } from 'react-router-dom'
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react'
 import { useAuthStore } from '../stores/auth'
@@ -34,7 +35,7 @@ export default function Login() {
       login(access_token, { first_name, last_name, email })
       navigate('/audio')
     } catch (err: unknown) {
-      const status = (err as { response?: { status?: number } }).response?.status
+      const status = isAxiosError(err) ? err.response?.status : undefined
       setServerError(status === 401 ? 'Invalid email or password.' : 'Something went wrong.')
     }
   }

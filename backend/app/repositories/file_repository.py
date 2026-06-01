@@ -1,6 +1,7 @@
 from typing import Optional
 
 from beanie import PydanticObjectId
+from bson.errors import InvalidId
 
 from app.models.file import File
 
@@ -16,7 +17,7 @@ class FileRepository:
                 File.id == PydanticObjectId(file_id),
                 File.user_id == user_id,
             )
-        except Exception:
+        except (ValueError, InvalidId):
             return None
 
     async def find_by_user(self, user_id: str, limit: int, offset: int) -> list[File]:
