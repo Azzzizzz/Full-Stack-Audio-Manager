@@ -1,10 +1,16 @@
+from pathlib import Path
 from typing import Optional
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+_ROOT = Path(__file__).resolve().parents[3]  # project root
+
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    model_config = SettingsConfigDict(
+        env_file=[str(_ROOT / ".env"), ".env"],
+        extra="ignore",
+    )
 
     # MongoDB
     MONGO_URI: str = "mongodb://localhost:27017/meeami"
