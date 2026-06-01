@@ -5,6 +5,7 @@ import { useAuthStore } from '../stores/auth'
 
 function SidebarContent({ onClose }: { onClose?: () => void }) {
   const logout = useAuthStore((s) => s.logout)
+  const user = useAuthStore((s) => s.user)
   const navigate = useNavigate()
 
   const handleLogout = () => {
@@ -50,8 +51,21 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
         </NavLink>
       </nav>
 
-      {/* Logout */}
-      <div className="px-3 py-4 border-t border-gray-100 flex-shrink-0">
+      {/* User + Logout */}
+      <div className="px-3 py-4 border-t border-gray-100 flex-shrink-0 space-y-1">
+        {user && (
+          <div className="flex items-center gap-3 px-3 py-2.5">
+            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700">
+              {user.first_name?.[0]?.toUpperCase() ?? '?'}
+            </div>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-medium text-gray-800">
+                {user.first_name} {user.last_name}
+              </p>
+              <p className="truncate text-xs text-gray-400">{user.email}</p>
+            </div>
+          </div>
+        )}
         <button
           onClick={handleLogout}
           className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-500 hover:bg-red-50 hover:text-red-600 transition"

@@ -30,7 +30,8 @@ export default function Login() {
     setServerError('')
     try {
       const res = await client.post('/login', data)
-      login(res.data.data.access_token)
+      const { access_token, first_name, last_name, email } = res.data.data
+      login(access_token, { first_name, last_name, email })
       navigate('/audio')
     } catch (err: unknown) {
       const status = (err as { response?: { status?: number } }).response?.status

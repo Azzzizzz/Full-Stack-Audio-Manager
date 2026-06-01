@@ -33,7 +33,8 @@ export default function Register() {
     try {
       await client.post('/register', data)
       const res = await client.post('/login', { email: data.email, password: data.password })
-      login(res.data.data.access_token)
+      const { access_token, first_name, last_name, email } = res.data.data
+      login(access_token, { first_name, last_name, email })
       navigate('/audio')
     } catch (err: unknown) {
       const status = (err as { response?: { status?: number } }).response?.status
