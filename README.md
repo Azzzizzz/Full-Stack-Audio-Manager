@@ -167,6 +167,40 @@ All `/audio*` routes require `Authorization: Bearer <token>`.
 { "success": false, "message": "...", "code": "..." }
 ```
 
+### Example curl calls
+
+```bash
+# 1. Register a new user
+curl -X POST http://localhost:8000/register \
+  -H "Content-Type: application/json" \
+  -d '{"first_name":"Test","last_name":"User","email":"you@example.com","password":"yourpass"}'
+
+# 2. Login — copy access_token from the response
+curl -X POST http://localhost:8000/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"testuser1@test.com","password":"12345678"}'
+
+# Set the token (replace with value from step 2)
+TOKEN=<paste_access_token_here>
+
+# 3. List audio files
+curl http://localhost:8000/audio \
+  -H "Authorization: Bearer $TOKEN"
+
+# 4. Upload an audio file
+curl -X POST http://localhost:8000/audio/upload \
+  -H "Authorization: Bearer $TOKEN" \
+  -F "file=@/path/to/file.mp3"
+
+# 5. Get presigned playback URL (replace FILE_ID)
+curl http://localhost:8000/audio/FILE_ID/play \
+  -H "Authorization: Bearer $TOKEN"
+
+# 6. Delete a file (replace FILE_ID)
+curl -X DELETE http://localhost:8000/audio/FILE_ID \
+  -H "Authorization: Bearer $TOKEN"
+```
+
 ---
 
 ## Project structure
