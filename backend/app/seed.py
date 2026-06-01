@@ -12,8 +12,8 @@ from app.core.security import hash_password
 from app.models.user import User
 from app.models.file import File
 
-DEMO_EMAIL = "demo@meeami.dev"
-DEMO_PASSWORD = "Demo1234!"
+DEMO_EMAIL = "testuser1@test.com"
+DEMO_PASSWORD = "12345678"
 
 
 async def seed():
@@ -27,7 +27,7 @@ async def seed():
         return
 
     user = User(
-        first_name="Demo",
+        first_name="Test",
         last_name="User",
         email=DEMO_EMAIL,
         hashed_password=hash_password(DEMO_PASSWORD),

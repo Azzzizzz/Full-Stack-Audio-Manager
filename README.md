@@ -11,7 +11,7 @@ Users register and log in (JWT), upload audio to AWS S3, browse their own files 
 | Backend API | https://full-stack-audio-manager.onrender.com |
 | Health check | https://full-stack-audio-manager.onrender.com/health |
 
-**Seeded credentials:** `demo@meeami.dev` / `Demo1234!`
+**Seeded credentials:** `testuser1@test.com` / `12345678`
 
 > **Cold-start note:** Render's free tier spins down after ~15 min of inactivity. The first request after idle may take 30–50 seconds to respond. Subsequent requests are fast.
 
@@ -42,8 +42,19 @@ Users register and log in (JWT), upload audio to AWS S3, browse their own files 
 git clone https://github.com/Azzzizzz/Full-Stack-Audio-Manager.git
 cd Full-Stack-Audio-Manager
 cp .env.example .env
-# fill in your values (see Environment variables below)
 ```
+
+Open `.env` and fill in these **required** values:
+
+```
+JWT_SECRET=<any long random string — run: openssl rand -hex 32>
+AWS_ACCESS_KEY_ID=<your IAM access key>
+AWS_SECRET_ACCESS_KEY=<your IAM secret key>
+AWS_REGION=<your bucket region, e.g. ap-south-1>
+AWS_BUCKET=<your S3 bucket name>
+```
+
+> `MONGO_URI` is automatically set by Docker Compose — you do not need to change it.
 
 ### 2. Start all services
 
@@ -60,12 +71,12 @@ Services:
 
 ```bash
 docker compose exec backend python -m app.seed
-# Created demo user: demo@meeami.dev / Demo1234!
+# Created demo user: testuser1@test.com / 12345678
 ```
 
 ### 4. Open the app
 
-Navigate to `http://localhost:8080` and log in with `demo@meeami.dev` / `Demo1234!`.
+Navigate to `http://localhost:8080` and log in with `testuser1@test.com` / `12345678`.
 
 ---
 
@@ -148,7 +159,7 @@ All `/audio*` routes require `Authorization: Bearer <token>`.
 | `GET` | `/audio/{id}/play` | JWT | Presigned playback URL (~15 min) |
 | `DELETE` | `/audio/{id}` | JWT | Delete file from S3 + DB |
 
-**Constraints:** audio MIME types only · max 50 MB per file · rate limits: 5 req/15 min on auth, 20 uploads/hour.
+**Constraints:** audio MIME types only · max 50 MB per file · rate limits: 30 req/15 min on auth, 20 uploads/hour.
 
 **Response envelope:**
 ```json

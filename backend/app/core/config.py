@@ -31,7 +31,7 @@ class Settings(BaseSettings):
 
     # Rate limits (SlowAPI format)
     RATE_LIMIT_DEFAULT: str = "100/minute"
-    RATE_LIMIT_AUTH: str = "5/15minutes"
+    RATE_LIMIT_AUTH: str = "30/15minutes"
     RATE_LIMIT_UPLOAD: str = "20/hour"
 
     @property
