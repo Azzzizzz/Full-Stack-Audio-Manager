@@ -38,6 +38,6 @@ app.include_router(auth_router.router)
 app.include_router(audio_router.router)
 
 
-@app.get("/health")
+@app.api_route("/health", methods=["GET", "HEAD"])
 async def health():
     return {"status": "ok"}
