@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import AppLayout from '../layouts/AppLayout'
+import DashboardLayout from '../layouts/DashboardLayout'
 import ProtectedRoute from './ProtectedRoute'
 import Login from '../pages/Login'
 import Register from '../pages/Register'
@@ -15,8 +16,13 @@ const router = createBrowserRouter([
       {
         element: <ProtectedRoute />,
         children: [
-          { path: '/audio', element: <AudioList /> },
-          { path: '/upload', element: <Upload /> },
+          {
+            element: <DashboardLayout />,
+            children: [
+              { path: '/audio', element: <AudioList /> },
+              { path: '/upload', element: <Upload /> },
+            ],
+          },
         ],
       },
       { path: '/', element: <Navigate to="/login" replace /> },
