@@ -42,4 +42,9 @@ class AuthService:
             )
 
         token = create_access_token(str(user.id))
-        return TokenResponse(access_token=token)
+        return TokenResponse(
+            access_token=token,
+            first_name=user.first_name,
+            last_name=user.last_name,
+            email=user.email,
+        )

@@ -27,6 +27,9 @@ class UserResponse(BaseModel):
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
+    first_name: str
+    last_name: str
+    email: str
 
 
 class SuccessResponse(BaseModel):
