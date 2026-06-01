@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useNavigate, Link } from 'react-router-dom'
 import { User, Mail, Lock, Eye, EyeOff } from 'lucide-react'
+import { useAuthStore } from '../stores/auth'
 import client from '../services/client'
 
 const schema = z.object({
@@ -17,6 +18,7 @@ type FormData = z.infer<typeof schema>
 
 export default function Register() {
   const navigate = useNavigate()
+  const login = useAuthStore((s) => s.login)
   const [serverError, setServerError] = useState('')
   const [showPassword, setShowPassword] = useState(false)
 
@@ -30,7 +32,9 @@ export default function Register() {
     setServerError('')
     try {
       await client.post('/register', data)
-      navigate('/login')
+      const res = await client.post('/login', { email: data.email, password: data.password })
+      login(res.data.data.access_token)
+      navigate('/audio')
     } catch (err: unknown) {
       const status = (err as { response?: { status?: number } }).response?.status
       setServerError(status === 409 ? 'That email is already registered.' : 'Something went wrong.')
